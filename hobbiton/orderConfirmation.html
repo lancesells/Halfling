@@ -756,7 +756,9 @@
 										<table class="twelve columns">
 											<tr>
 												<td class="lesspadding">
-													<p class="small">Reset your password.</p>
+												<p class="small">
+													Your order has been received.
+												</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -773,8 +775,8 @@
 												<td>
 												<!-- Use either a logo or your shop name as text. -->
 												<!-- Shop Name -->
-												<h1><a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_password_reset">Halfling</a></h1>													<!-- Logo -->
-												<!-- 	<a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_password_reset">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
+												<h1><a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=order_confirmation">{{ shop.name }}</a></h1>											<!-- Logo -->
+											<!-- 	<a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=order_confirmation">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -782,55 +784,52 @@
 									</td>
 								</tr>
 							</table>
-					
-					<!-- Order Name -->
-					<table class="row header">
-				<tr>
-					<td class="wrapper last">
-						<table class="twelve columns">
-							<tr>
-								<td>
-									<h4 class="center">Your password.</h4>
-									<p>{% if customer.first_name %}Hi {{ customer.first_name }},<br />{% endif %}You have requested to have your <a href="{{ customer.reset_password_url }}?utm_source=notification&utm_medium=email&utm_campaign=customer_password_reset">password reset</a> for your account at {{ shop.name }}.<br />If you don't want to reset your password, just ignore this email.</p>
-								</td>
-								<td class="expander"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			<!-- Tracking Number -->
-							<table class="row">
+							<!-- Order Details -->
+							<table class="row header">
 								<tr>
-									<td class="wrapper">
-										<table class="three columns">
+									<td class="wrapper last">
+										<table class="twelve columns">
 											<tr>
 												<td>
+												<h4 class="center">Thank you for your order.</h4>
+												<p class="margintop8">{% if billing_address.first_name %}Hi {{ billing_address.first_name }},<br />{% endif %}This is confirmation that we've received your order. Thank you!<br />Order {{ name }} | {{ date | date: "%B %d, %Y at %I:%M%p" }}</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
 										</table>
 									</td>
+								</tr>
+							</table>
+							<!-- Shipping & Billing Address -->
+							<table class="row">
+								<tr>
 									<td class="wrapper">
 										<table class="six columns">
 											<tr>
-												<td>
-													<table class="button">
-													  <tr>
-													    <td>
-															<a href="{{ customer.reset_password_url }}?utm_source=notification&utm_medium=email&utm_campaign=customer_password_reset">Reset Your Password</a>
-													    </td>
-													  </tr>
-													</table>
+												<td class="center">
+												<span class="small strong">Shipping Here</span><br />
+												{% if requires_shipping %} 
+												{{ shipping_address.name }}<br />
+												{{ shipping_address.street }}<br />
+												{{ shipping_address.city }}, {{ shipping_address.province }} {{ shipping_address.zip }}<br />
+												{{ shipping_address.country }}
+												{% else %}
+												No shipping required.
+												{% endif %}
 												</td>
 												<td class="expander"></td>
 											</tr>
 										</table>
 									</td>
 									<td class="wrapper last">
-										<table class="three columns">
+										<table class="six columns">
 											<tr>
-												<td>
+												<td class="center">
+												<span class="small strong">Paid By</span><br />
+												{{ billing_address.name }}<br />
+												{{ billing_address.street }}<br />
+												{{ billing_address.city }}, {{ billing_address.province }} {{ billing_address.zip }}<br />
+												{{ billing_address.country }}
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -853,6 +852,124 @@
 						          </td>
 						        </tr>
 						    </table>
+							<!-- Product Details -->
+							<table class="row">
+								<tr>
+									<td class="wrapper">
+										<table class="twelve columns lineitems">
+											<tr class="lineitems">
+												<td class="two sub-columns small left hide-for-small">
+												</td>
+												<td class="five sub-columns small left">
+												Product
+												</td>
+												<td class="four sub-columns small">
+												Quantity
+												</td>
+												<td class="one sub-columns last left">
+												Price
+												</td>
+											</tr>
+											
+											{% for line in line_items %}
+											<tr class="lineitems">
+												<td class="two sub-columns hide-for-small">
+													{% if line.line_item.product.featured_image %}<img src="{{ line.line_item.product.featured_image | product_img_url: 'thumb' }}" />{% endif %}
+												</td>
+												<td class="five sub-columns left">
+									
+												<!-- If your product has a '-' in the title this will mess it up. -->
+												{% assign productTitle = line.title | split: '-' %}
+													<strong>{{ productTitle[0] }}</strong><br />
+													<span class="light">{{ productTitle[1] }}</span>
+												</td>
+												<td class="four sub-columns center">{{ line.quantity }}</td>
+												<td class="one sub-columns left">{{ line.line_price | money }}</td>
+											</tr>
+											{% endfor %}
+											
+											{% if discounts %}
+											<tr>
+												<td class="two sub-columns hide-for-small"></td>
+												<td class="five sub-columns"></td>
+												<td class="four sub-columns small strong red right">
+													Discount
+												</td>
+												<td class="one sub-columns red left">
+													{{ discounts_savings | money }}
+												</td>
+											</tr>
+											<tr>
+												<td class="two sub-columns hide-for-small"></td>
+												<td class="five sub-columns"></td>
+												<td class="four sub-columns small strong right">
+													Subtotal
+												</td>
+												<td class="one sub-columns left">{{ subtotal_price | money }}</td>
+											</tr>
+											{% else %}
+											<tr>
+												<td class="two sub-columns hide-for-small"></td>
+												<td class="five sub-columns"></td>
+												<td class="four sub-columns small strong right">
+													Subtotal
+												</td>
+												<td class="one sub-columns left">{{ subtotal_price | money }}</td>
+											</tr>
+											{% endif %}
+											
+											{% for tax_line in tax_lines %}
+											<tr >
+												<td class="two sub-columns hide-for-small"></td>
+												<td class="five sub-columns"></td>
+												<td class="four sub-columns right small strong">
+													{{ tax_line.title }}
+												</td>
+												<td class="one sub-columns left">{{ tax_line.price | money }}</td>
+											</tr>
+											{% endfor %}
+											
+											{% if requires_shipping %} 
+											<tr >
+												<td class="two sub-columns hide-for-small"></td>
+												<td class="five sub-columns"></td>
+												<td class="four sub-columns right small strong">
+													Shipping
+												</td>
+												<td class="one sub-columns left">{{ shipping_price | money }}</td>
+											</tr>
+											{% endif %}
+											
+											<tr >
+												<td class="two sub-columns hide-for-small"></td>
+												<td class="five sub-columns"></td>
+												<td class="four sub-columns right">
+													<h5 class="right">Total</h5>
+													
+												</td>
+												<td class="one sub-columns">
+													<h5 class="left">{{ total_price | money }}</h5>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>			
+							<!-- Line -->	
+							<table class="row">
+						        <tr>
+						          <td class="wrapper last line">
+									  <table class="twelve columns">
+										  <tr>
+											  <td>
+												  <hr />
+											  </td>
+											  <td class="expander"></td>
+										  </tr>
+									  </table>
+						          </td>
+						        </tr>
+						    </table>
 							<!-- Customer Service -->
 							<table class="row">
 								<tr>
@@ -860,7 +977,7 @@
 										<table class="twelve columns">
 											<tr>
 												<td>
-													<p><span class="strong">Questions about your password?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
+													<p><span class="strong">Questions about your order?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -874,8 +991,7 @@
 									<td class="wrapper last lesspadding">
 										<table class="twelve columns">
 											<tr>
-												<td class="lesspadding">
-													<p class="emphasis small"><span class="strong">Thank you.</span><br />{{ shop.name }}</p>
+												<td class="lesspadding"><p class="emphasis small"><span class="strong">Thank you.</span><br />{{ shop.name }}</p>
 												</td>
 												<td class="expander"></td>
 											</tr>

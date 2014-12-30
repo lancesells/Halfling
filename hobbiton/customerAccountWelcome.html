@@ -756,8 +756,7 @@
 										<table class="twelve columns">
 											<tr>
 												<td class="lesspadding">
-												<p class="small">
-													A little reminder.												</p>
+												<p class="small">Your account is now active.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -774,8 +773,8 @@
 												<td>
 												<!-- Use either a logo or your shop name as text. -->
 												<!-- Shop Name -->
-												<h1><a href="{{ url }}/?utm_source=notification&utm_medium=email&utm_campaign=abandoned_checkout_notification">Halfling</a></h1>											<!-- Logo -->
-											<!-- 	<a href="{{ url }}/?utm_source=notification&utm_medium=email&utm_campaign=abandoned_checkout_notification">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
+												<h1><a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_account_welcome">{{ shop.name }}</a></h1>											<!-- Logo -->
+											<!-- 	<a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_account_welcome">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -783,63 +782,16 @@
 									</td>
 								</tr>
 							</table>
-					
-					<!-- Order Name -->
-					<table class="row header">
-				<tr>
-					<td class="wrapper last">
-						<table class="twelve columns">
-							<tr>
-								<td>
-								<h4 class="center">You forgot something.</h4>
-								<p class="margintop8">{% if billing_address.first_name %}Hi {{ billing_address.first_name }},<br />{% endif %}Thank you for shopping with us. We noticed you didn't finish your purchase and wanted to remind you that we're here to help in case you have any questions.</p>
-								</td>
-								<td class="expander"></td>
-							</tr>							
-						</table>
-					</td>
-				</tr>
-			</table>
-								</td>
-								<td class="expander"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			
-							<!-- Finish your Order CTA -->
-							<table class="row">
+							<!-- Account Message -->
+							<table class="row header">
 								<tr>
-									<td class="wrapper">
-										<table class="three columns">
-											<tr>
-												<td>
-												</td>
-												<td class="expander"></td>
-											</tr>
-										</table>
-									</td>
-									<td class="wrapper">
-										<table class="six columns">
-											<tr>
-												<td>
-													<table class="button">
-													  <tr>
-													    <td>
-													      <a href="{{ url }}/?utm_source=notification&utm_medium=email&utm_campaign=abandoned_checkout_notification">Finish your order</a>
-													    </td>
-													  </tr>
-													</table>
-												</td>
-												<td class="expander"></td>
-											</tr>
-										</table>
-									</td>
 									<td class="wrapper last">
-										<table class="three columns">
+										<table class="twelve columns">
 											<tr>
 												<td>
+													<h4 class="center">{% if customer.first_name %}Hi {{ customer.first_name }}.{% else %}Welcome to {{ shop.name }}.{% endif %}</h4>
+												<p class="margintop8">Thank you so much for setting up an account with us.</p>
+												<p>Don't forget to save time by logging into your account the next time you <a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_account_welcome">shop with us</a>.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -847,62 +799,21 @@
 									</td>
 								</tr>
 							</table>
-
-					
-					<!-- Messaging -->
-					<table class="row">
-				<tr>
-					<td class="wrapper last">
-						<table class="twelve columns">
-							<tr>
-								<td class="center"><p>
-								Here's what you left in your cart.
-								</p>
-								</td>
-								<td class="expander"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>	
-					
-					{% for line in line_items %}
-					<!-- Cart Contents -->
-					<table class="row">
-				<tr>
-					<td class="wrapper last">
-						<table class="twelve columns">
-							<tr>
-								<td>
-								<a href="{{ url }}?utm_source=notification&utm_medium=email&utm_campaign=abandoned_checkout_notification" class="red"><img class="center" src="{{ line.product.featured_image | product_img_url: 'medium' }}" alt="{{ item.title }}"></a><br />
-								<p><a href="{{ url }}?utm_source=notification&utm_medium=email&utm_campaign=abandoned_checkout_notification" class="red">{{ line.title }}</a></p>
-								</td>
-								<td class="expander"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>		
-					
-					
-					<!-- Line Separation -->	
-					<table class="row">
-		        <tr>
-		          <td class="wrapper last line">
-					  <table class="twelve columns">
-						  <tr>
-							  <td>
-								  <hr />
-							  </td>
-							  <td class="expander"></td>
-						  </tr>
-					  </table>
-		          </td>
-		        </tr>
-		    </table>
-					{% endfor %}
-
-							
+							<!-- Line -->	
+							<table class="row">
+						        <tr>
+						          <td class="wrapper last line">
+									  <table class="twelve columns">
+										  <tr>
+											  <td>
+												  <hr />
+											  </td>
+											  <td class="expander"></td>
+										  </tr>
+									  </table>
+						          </td>
+						        </tr>
+						    </table>
 							<!-- Customer Service -->
 							<table class="row">
 								<tr>
@@ -910,7 +821,7 @@
 										<table class="twelve columns">
 											<tr>
 												<td>
-													<p><span class="strong">Questions about ordering?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
+													<p><span class="strong">Questions about your account?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -918,7 +829,6 @@
 									</td>
 								</tr>
 							</table>	
-					
 							<!-- Footer -->
 							<table class="row">
 								<tr>

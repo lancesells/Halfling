@@ -343,19 +343,19 @@
 	/* Typography */
 	
 	body, table.body, h1, h2, h3, h4, h5, h6, p, td { 
-	  color: #222222;
-	  /* font-family: "Helvetica", "Arial", sans-serif; */
-	  font-family: "Georgia", "Times", serif;
-	  font-weight: normal; 
+	  color: #333;
+	  font-family: "Helvetica Neue", "Arial", sans-serif;
+	  /* font-family: "Georgia", "Times", serif; */
+	  font-weight: 400; 
 	  padding:0; 
 	  margin: 0;
-	  text-align: center; 
+	  text-align: left; 
 	  line-height: 1.3;
 	}
 	
 	h1, h2, h3, h4, h5, h6 {
 	  word-break: normal;
-	  text-align: center;
+	  text-align: left;
 	}
 	
 	h1 {font-size: 40px;}
@@ -373,7 +373,7 @@
 	
 	p { 
 	  margin-bottom: 10px;
-	  text-align: center; 
+	  text-align: left; 
 	  color: #606060;
 	}
 	
@@ -503,8 +503,8 @@
 	table.large-button td a {
 	  font-weight: bold;
 	  text-decoration: none;
-	  font-family: Helvetica, Arial, sans-serif;
-	  font-family: Georgia, Times, serif;
+	  font-family: "Helvetica Neue", "Arial", sans-serif;
+	  /* font-family: Georgia, Times, serif; */
 	  color: #ffffff !important;
 	  font-size: 16px;
 	}
@@ -756,9 +756,7 @@
 										<table class="twelve columns">
 											<tr>
 												<td class="lesspadding">
-												<p class="small">
-													Your order has been updated.
-												</p>
+												<p class="small">Your account is now active.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -766,7 +764,6 @@
 									</td>
 								</tr>
 							</table>
-							
 							<!-- Header -->
 							<table class="row header">
 								<tr>
@@ -776,8 +773,8 @@
 												<td>
 												<!-- Use either a logo or your shop name as text. -->
 												<!-- Shop Name -->
-												<h1><a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=shipping_update">Halfling</a></h1>											<!-- Logo -->
-											<!-- 	<a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=shipping_update">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
+												<h1><a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_account_welcome">{{ shop.name }}</a></h1>											<!-- Logo -->
+											<!-- 	<a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_account_welcome">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -785,24 +782,16 @@
 									</td>
 								</tr>
 							</table>
-						
-							<!-- Shipping Confirmation -->
-							<table class="row">
+							<!-- Account Message -->
+							<table class="row header">
 								<tr>
 									<td class="wrapper last">
 										<table class="twelve columns">
 											<tr>
 												<td>
-												<h4>Your order has new shipping information.</h4>
-												<p class="margintop8">{% if billing_address.first_name %}Hi {{ billing_address.first_name }},<br />{% endif %}{% if fulfillment.item_count == 1 %}{% for line in fulfillment.fulfillment_line_items | limit: 1 %}{% assign productTitle = line.line_item.title | split: '-' %}<strong>{{ productTitle[0] }}</strong> has shipped{% endfor %}{% else %}{% for line in fulfillment.fulfillment_line_items | limit: 1 %}{% assign productTitle = line.line_item.title | split: '-' %}<strong>{{ productTitle[0] }}</strong> and <strong>{{ fulfillment.item_count | minus: 1 }} other {% if fulfillment.item_count == 2 %}item{% else %}items{% endif %}</strong> has shipped{% endfor %}{% endif %}{% if requires_shipping %}{% if fulfillment.tracking_company %} via {{ fulfillment.tracking_company }}{% endif %} to this address:{% else %}.{% endif %}</p>
-												{% if requires_shipping %}	      
-												<!-- Shipping Address --><p>
-												{{ shipping_address.name }}<br />
-												{{ shipping_address.street }}<br />
-												{{ shipping_address.city }}, {{ shipping_address.province }} {{ shipping_address.zip }}<br />
-												{{ shipping_address.country }}
-												</p><!-- End Shipping Address -->
-												{% endif %}
+													<h4>{% if customer.first_name %}Hi {{ customer.first_name }}.{% else %}Welcome to {{ shop.name }}.{% endif %}</h4>
+												<p class="margintop8">Thank you so much for setting up an account with us.</p>
+												<p>Don't forget to save time by logging into your account the next time you <a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_account_welcome">shop with us</a>.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -810,97 +799,6 @@
 									</td>
 								</tr>
 							</table>
-					
-							{% if fulfillment.tracking_number %}
-							<!-- Tracking Number -->
-							<table class="row">
-								<tr>
-									<td class="wrapper">
-										<table class="three columns">
-											<tr>
-												<td>
-												</td>
-												<td class="expander"></td>
-											</tr>
-										</table>
-									</td>
-									<td class="wrapper">
-										<table class="six columns">
-											<tr>
-												<td>
-													<table class="button">
-													  <tr>
-													    <td>
-													      <a href="{{ fulfillment.tracking_url }}">Track your order</a>
-													    </td>
-													  </tr>
-													</table>
-												</td>
-												<td class="expander"></td>
-											</tr>
-										</table>
-									</td>
-									<td class="wrapper last">
-										<table class="three columns">
-											<tr>
-												<td>
-												</td>
-												<td class="expander"></td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-							<table class="row">
-								<tr>
-									<td class="wrapper last">
-										<table class="twelve columns">
-											<tr>
-												<td class="panel">
-												<p>Order {{ name }}<br />Tracking number: {{ fulfillment.tracking_number }}<br />*Please allow some time for the tracking number to show at {% if fulfillment.tracking_company %}{{ fulfillment.tracking_company }}{% else %}the shipping company{% endif %}.</p>
-												</td>
-												<td class="expander"></td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-							{% endif %}	
-						
-							<!-- What shipped -->
-							<table class="row">
-								<tr>
-									<td class="wrapper">
-										<table class="twelve columns">
-											<tr>
-												<td class="two sub-columns hide-for-small">
-												</td>
-												<td class="six sub-columns small left">
-													What Shipped
-												</td>
-												<td class="four sub-columns small">
-													Quantity
-												</td>
-											</tr>
-											{% for line in fulfillment.fulfillment_line_items %}
-											<tr>
-												<td class="two sub-columns hide-for-small">
-													{% if line.line_item.product.featured_image %}<img src="{{ line.line_itemproduct.featured_image | product_img_url: 'thumb' }}" />{% endif %}
-												</td>
-												<td class="six sub-columns left">
-												<!-- Hola! This will break if your product title contain a '-' -->
-												{% assign productTitle = line.line_item.title | split: '-' %}
-													<strong>{{ productTitle[0] }}</strong><br />
-													<span class="lighter">{{ productTitle[1] }}</span>
-												</td>
-												<td class="four sub-columns center">{{ line.quantity }}</td>
-											</tr>
-											{% endfor %}
-										</table>
-									</td>
-								</tr>
-							</table>
-					
 							<!-- Line -->	
 							<table class="row">
 						        <tr>
@@ -916,7 +814,6 @@
 						          </td>
 						        </tr>
 						    </table>
-							
 							<!-- Customer Service -->
 							<table class="row">
 								<tr>
@@ -924,7 +821,7 @@
 										<table class="twelve columns">
 											<tr>
 												<td>
-													<p><span class="strong">Questions about your shipment?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
+													<p><span class="strong">Questions about your account?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -932,7 +829,6 @@
 									</td>
 								</tr>
 							</table>	
-					
 							<!-- Footer -->
 							<table class="row">
 								<tr>

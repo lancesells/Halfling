@@ -343,19 +343,19 @@
 	/* Typography */
 	
 	body, table.body, h1, h2, h3, h4, h5, h6, p, td { 
-	  color: #222222;
-	  /* font-family: "Helvetica", "Arial", sans-serif; */
-	  font-family: "Georgia", "Times", serif;
-	  font-weight: normal; 
+	  color: #333;
+	  font-family: "Helvetica Neue", "Arial", sans-serif;
+	  /* font-family: "Georgia", "Times", serif; */
+	  font-weight: 400; 
 	  padding:0; 
 	  margin: 0;
-	  text-align: center; 
+	  text-align: left; 
 	  line-height: 1.3;
 	}
 	
 	h1, h2, h3, h4, h5, h6 {
 	  word-break: normal;
-	  text-align: center;
+	  text-align: left;
 	}
 	
 	h1 {font-size: 40px;}
@@ -373,7 +373,7 @@
 	
 	p { 
 	  margin-bottom: 10px;
-	  text-align: center; 
+	  text-align: left; 
 	  color: #606060;
 	}
 	
@@ -503,8 +503,8 @@
 	table.large-button td a {
 	  font-weight: bold;
 	  text-decoration: none;
-	  font-family: Helvetica, Arial, sans-serif;
-	  font-family: Georgia, Times, serif;
+	  font-family: "Helvetica Neue", "Arial", sans-serif;
+	  /* font-family: Georgia, Times, serif; */
 	  color: #ffffff !important;
 	  font-size: 16px;
 	}
@@ -756,9 +756,7 @@
 										<table class="twelve columns">
 											<tr>
 												<td class="lesspadding">
-												<p class="small">
-													Your order has been received.
-												</p>
+												<p class="small">Your account has been created.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -766,7 +764,6 @@
 									</td>
 								</tr>
 							</table>
-							
 							<!-- Header -->
 							<table class="row header">
 								<tr>
@@ -776,8 +773,8 @@
 												<td>
 												<!-- Use either a logo or your shop name as text. -->
 												<!-- Shop Name -->
-												<h1><a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=shipping_update">Halfling</a></h1>											<!-- Logo -->
-											<!-- 	<a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=shipping_update">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
+												<h1><a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_account_activation">{{ shop.name }}</a></h1>											<!-- Logo -->
+											<!-- 	<a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=customer_account_activation">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -785,182 +782,53 @@
 									</td>
 								</tr>
 							</table>
-					
-					<!-- Order Name -->
-					<table class="row header">
-				<tr>
-					<td class="wrapper last">
-						<table class="twelve columns">
-							<tr>
-								<td>
-								<h4 class="center">Thank you for your order.</h4>
-								<p>{% if billing_address.first_name %}Hi {{ billing_address.first_name }},<br />{% endif %}Your Order {{ name }} placed on {{ date | date: "%B %d, %Y at %I:%M%p" }} has been received.</p>
-								</td>
-								<td class="expander"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		      
-					<!-- Shipping & Billing Address -->
-					<table class="row">
-				<tr>
-					<td class="wrapper">
-						<table class="six columns">
-							<tr>
-								<td class="center">
-								<span class="small strong">Your order is shipping here</span><br />
-								{% if requires_shipping %} 
-								{{ shipping_address.name }}<br />
-								{{ shipping_address.street }}<br />
-								{{ shipping_address.city }}, {{ shipping_address.province }} {{ shipping_address.zip }}<br />
-								{{ shipping_address.country }}
-								{% else %}
-								No shipping required.
-								{% endif %}
-								</td>
-								<td class="expander"></td>
-							</tr>
-						</table>
-					</td>
-					<td class="wrapper last">
-						<table class="six columns">
-							<tr>
-								<td class="center">
-								<span class="small strong">It was paid by</span><br />
-								{{ billing_address.name }}<br />
-								{{ billing_address.street }}<br />
-								{{ billing_address.city }}, {{ billing_address.province }} {{ billing_address.zip }}<br />
-								{{ billing_address.country }}
-								</td>
-								<td class="expander"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		      
-					<!-- Line Separation -->	
-					<table class="row">
-		        <tr>
-		          <td class="wrapper"  style="padding-top: 0px; padding-bottom: 0px;">
-					  <table class="twelve columns">
-						  <tr>
-							  <td>
-								  <hr />
-							  </td>
-							  <td class="expander"></td>
-						  </tr>
-					  </table>
-		          </td>
-		        </tr>
-		    </table>
-					
-					<!-- Product Details -->
-					<table class="row">
-				<tr>
-					<td class="wrapper">
-						<table class="twelve columns lineitems">
-							<tr class="lineitems">
-								<td class="two sub-columns small left hide-for-small">
-								</td>
-								<td class="five sub-columns small left">
-								Product
-								</td>
-								<td class="four sub-columns small">
-								Quantity
-								</td>
-								<td class="one sub-columns last left">
-								Price
-								</td>
-							</tr>
-							
-							{% for line in line_items %}
-							<tr class="lineitems">
-								<td class="two sub-columns hide-for-small">
-									{% if line.line_item.product.featured_image %}<img src="{{ line.line_item.product.featured_image | product_img_url: 'thumb' }}" />{% endif %}
-								</td>
-								<td class="five sub-columns left">
-					
-								<!-- If your product has a '-' in the title this will mess it up. -->
-								{% assign productTitle = line.title | split: '-' %}
-									<strong>{{ productTitle[0] }}</strong><br />
-									<span class="light">{{ productTitle[1] }}</span>
-								</td>
-								<td class="four sub-columns center">{{ line.quantity }}</td>
-								<td class="one sub-columns left">{{ line.line_price | money }}</td>
-							</tr>
-							{% endfor %}
-							
-							{% if discounts %}
-							<tr>
-								<td class="two sub-columns hide-for-small"></td>
-								<td class="five sub-columns"></td>
-								<td class="four sub-columns small strong red right">
-									Discount
-								</td>
-								<td class="one sub-columns red left">
-									{{ discounts_savings | money }}
-								</td>
-							</tr>
-							<tr>
-								<td class="two sub-columns hide-for-small"></td>
-								<td class="five sub-columns"></td>
-								<td class="four sub-columns small strong right">
-									Subtotal
-								</td>
-								<td class="one sub-columns left">{{ subtotal_price | money }}</td>
-							</tr>
-							{% else %}
-							<tr>
-								<td class="two sub-columns hide-for-small"></td>
-								<td class="five sub-columns"></td>
-								<td class="four sub-columns small strong right">
-									Subtotal
-								</td>
-								<td class="one sub-columns left">{{ subtotal_price | money }}</td>
-							</tr>
-							{% endif %}
-							
-							{% for tax_line in tax_lines %}
-							<tr >
-								<td class="two sub-columns hide-for-small"></td>
-								<td class="five sub-columns"></td>
-								<td class="four sub-columns right small strong">
-									{{ tax_line.title }}
-								</td>
-								<td class="one sub-columns left">{{ tax_line.price | money }}</td>
-							</tr>
-							{% endfor %}
-							
-							{% if requires_shipping %} 
-							<tr >
-								<td class="two sub-columns hide-for-small"></td>
-								<td class="five sub-columns"></td>
-								<td class="four sub-columns right small strong">
-									Shipping
-								</td>
-								<td class="one sub-columns left">{{ shipping_price | money }}</td>
-							</tr>
-							{% endif %}
-							
-							<tr >
-								<td class="two sub-columns hide-for-small"></td>
-								<td class="five sub-columns"></td>
-								<td class="four sub-columns right">
-									<h5 class="right">Total</h5>
-									
-								</td>
-								<td class="one sub-columns">
-									<h5 class="left">{{ total_price | money }}</h5>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-										
+							<!-- Account Activation Message -->
+							<table class="row header">
+								<tr>
+									<td class="wrapper last">
+										<table class="twelve columns">
+											<tr>
+												<td class="lesspadding">
+												<h4>Your account is waiting for you.</h4>
+												<p>{% if customer.first_name %}Hi {{ customer.first_name }},<br />{% endif %}Thanks for setting up an account with us. Now all you have to do is <a href="{{ customer.account_activation_url }}?utm_source=notification&utm_medium=email&utm_campaign=customer_account_activation" title="Activate your Account">activate your account</a> and set up your password.</p>
+												<p>If the account was created in error, you can <a href="{{ customer.account_activation_url }}?utm_source=notification&utm_medium=email&utm_campaign=customer_account_activation" title="Decline the Account">decline the account</a> or just ignore this message.</p>
+												</td>
+												<td class="expander"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+							<!-- Activate CTA -->
+							<table class="row">
+								<tr>
+									<td class="wrapper">
+										<table class="six columns">
+											<tr>
+												<td>
+													<table class="button">
+													  <tr>
+													    <td>
+													      <a href="{{ customer.account_activation_url }}?utm_source=notification&utm_medium=email&utm_campaign=customer_account_activation">Activate Your Account</a>
+													    </td>
+													  </tr>
+													</table>
+												</td>
+												<td class="expander"></td>
+											</tr>
+										</table>
+									</td>
+									<td class="wrapper last">
+										<table class="six columns">
+											<tr>
+												<td>
+												</td>
+												<td class="expander"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
 							<!-- Line -->	
 							<table class="row">
 						        <tr>
@@ -976,7 +844,6 @@
 						          </td>
 						        </tr>
 						    </table>
-							
 							<!-- Customer Service -->
 							<table class="row">
 								<tr>
@@ -984,7 +851,7 @@
 										<table class="twelve columns">
 											<tr>
 												<td>
-													<p><span class="strong">Questions about your order?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
+													<p><span class="strong">Questions about your account?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -992,7 +859,6 @@
 									</td>
 								</tr>
 							</table>	
-					
 							<!-- Footer -->
 							<table class="row">
 								<tr>

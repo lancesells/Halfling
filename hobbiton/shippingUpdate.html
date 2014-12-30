@@ -757,7 +757,8 @@
 											<tr>
 												<td class="lesspadding">
 												<p class="small">
-													You have a refund coming.															</p>
+													Your order has been updated.
+												</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -765,7 +766,6 @@
 									</td>
 								</tr>
 							</table>
-							
 							<!-- Header -->
 							<table class="row header">
 								<tr>
@@ -775,8 +775,8 @@
 												<td>
 												<!-- Use either a logo or your shop name as text. -->
 												<!-- Shop Name -->
-												<h1><a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=refund_notification">Halfling</a></h1>											<!-- Logo -->
-											<!-- 	<a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=refund_notification">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
+												<h1><a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=shipping_update">{{ shop.name }}</a></h1>											<!-- Logo -->
+											<!-- 	<a href="{{ shop.url }}/?utm_source=notification&utm_medium=email&utm_campaign=shipping_update">{{ 'logo.png' | asset_url | img_tag: shop.name }}</a> -->
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -784,32 +784,77 @@
 									</td>
 								</tr>
 							</table>
-							
-					
-					<!-- Order Name -->
-					<table class="row header">
-				<tr>
-					<td class="wrapper last">
-						<table class="twelve columns">
-							<tr>
-								<td class="lesspadding">
-								<h4 class="center">You've received a refund.</h4>
-								<p>{% if customer.first_name %}Great news {{ customer.first_name }}! You're{% else %}Great news! You're{% endif %} receiving a refund for Order {{ name }}</p>
-							</td>
-								<td class="expander"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
+							<!-- Shipping Confirmation -->
+							<table class="row">
+								<tr>
+									<td class="wrapper last">
+										<table class="twelve columns">
+											<tr>
+												<td>
+												<h4>Your order has new shipping information.</h4>
+												<p class="margintop8">{% if billing_address.first_name %}Hi {{ billing_address.first_name }},<br />{% endif %}{% if fulfillment.item_count == 1 %}{% for line in fulfillment.fulfillment_line_items | limit: 1 %}{% assign productTitle = line.line_item.title | split: '-' %}<strong>{{ productTitle[0] }}</strong> has shipped{% endfor %}{% else %}{% for line in fulfillment.fulfillment_line_items | limit: 1 %}{% assign productTitle = line.line_item.title | split: '-' %}<strong>{{ productTitle[0] }}</strong> and <strong>{{ fulfillment.item_count | minus: 1 }} other {% if fulfillment.item_count == 2 %}item{% else %}items{% endif %}</strong> has shipped{% endfor %}{% endif %}{% if requires_shipping %}{% if fulfillment.tracking_company %} via {{ fulfillment.tracking_company }}{% endif %} to this address:{% else %}.{% endif %}</p>
+												{% if requires_shipping %}	      
+												<!-- Shipping Address --><p>
+												{{ shipping_address.name }}<br />
+												{{ shipping_address.street }}<br />
+												{{ shipping_address.city }}, {{ shipping_address.province }} {{ shipping_address.zip }}<br />
+												{{ shipping_address.country }}
+												</p><!-- End Shipping Address -->
+												{% endif %}
+												</td>
+												<td class="expander"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+							{% if fulfillment.tracking_number %}
+							<!-- Tracking Number -->
+							<table class="row">
+								<tr>
+									<td class="wrapper">
+										<table class="three columns">
+											<tr>
+												<td>
+												</td>
+												<td class="expander"></td>
+											</tr>
+										</table>
+									</td>
+									<td class="wrapper">
+										<table class="six columns">
+											<tr>
+												<td>
+													<table class="button">
+													  <tr>
+													    <td>
+													      <a href="{{ fulfillment.tracking_url }}?utm_source=notification&utm_medium=email&utm_campaign=shipping_update">Track Your Order</a>
+													    </td>
+													  </tr>
+													</table>
+												</td>
+												<td class="expander"></td>
+											</tr>
+										</table>
+									</td>
+									<td class="wrapper last">
+										<table class="three columns">
+											<tr>
+												<td>
+												</td>
+												<td class="expander"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
 							<table class="row">
 								<tr>
 									<td class="wrapper last">
 										<table class="twelve columns">
 											<tr>
 												<td class="panel">
-												<p class="marginbottom0">Amount refunded:</p>
-												<h3>{{ amount | money }}</h3>
+												<p>Order {{ name }}<br />Tracking number: {{ fulfillment.tracking_number }}<br />*Please allow some time for the tracking number to show at {% if fulfillment.tracking_company %}{{ fulfillment.tracking_company }}{% else %}the shipping company{% endif %}.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -817,24 +862,23 @@
 									</td>
 								</tr>
 							</table>
-
-							{% if refund_line_items.size > 0 %}
-							<!-- What refunded -->
+							{% endif %}	
+							<!-- What Shipped -->
 							<table class="row">
 								<tr>
-									<td class="wrapper">
+									<td class="wrapper last">
 										<table class="twelve columns">
 											<tr>
 												<td class="two sub-columns hide-for-small">
 												</td>
 												<td class="six sub-columns small left">
-													Refunded Items
+													What Shipped
 												</td>
 												<td class="four sub-columns small">
 													Quantity
 												</td>
 											</tr>
-											{% for line in refund_line_items %}
+											{% for line in fulfillment.fulfillment_line_items %}
 											<tr>
 												<td class="two sub-columns hide-for-small">
 													{% if line.line_item.product.featured_image %}<img src="{{ line.line_itemproduct.featured_image | product_img_url: 'thumb' }}" />{% endif %}
@@ -852,8 +896,6 @@
 									</td>
 								</tr>
 							</table>
-							{% endif %}
-							
 							<!-- Line -->	
 							<table class="row">
 						        <tr>
@@ -869,7 +911,6 @@
 						          </td>
 						        </tr>
 						    </table>
-							
 							<!-- Customer Service -->
 							<table class="row">
 								<tr>
@@ -877,7 +918,7 @@
 										<table class="twelve columns">
 											<tr>
 												<td>
-													<p><span class="strong">Questions about your refund?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
+													<p><span class="strong">Questions about your shipment?</span><br />Simply reply to this email and we'll answer any questions you have.</p>
 												</td>
 												<td class="expander"></td>
 											</tr>
@@ -885,7 +926,6 @@
 									</td>
 								</tr>
 							</table>	
-					
 							<!-- Footer -->
 							<table class="row">
 								<tr>
