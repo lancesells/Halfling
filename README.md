@@ -8,7 +8,5 @@ Halfling
 * Modify to your heart's content.
 * Run through [Zurb's CSS inliner](http://zurb.com/ink/inliner.php)
 * IMPORTANT! Don't forget to run through the CSS inliner. The emails will be plain if you don't.
-* Go to your Shopify Store > Account > Notifications
+* Go to your Shopify Store > Settings > Notifications
 * Copy and paste.
-
-
