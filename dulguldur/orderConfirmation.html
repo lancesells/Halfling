@@ -873,8 +873,7 @@
 											{% for line in line_items %}
 											<tr class="lineitems">
 												<td class="two sub-columns hide-for-small">
-													{% if line.line_item.product.featured_image %}<img src="{{ line.line_item.product.featured_image | product_img_url: 'thumb' }}" />{% endif %}
-												</td>
+													{% if line.product.featured_image %}<img src="{{ line.product.featured_image | product_img_url: 'thumb' }}" />{% endif %}												</td>
 												<td class="five sub-columns">
 									
 												<!-- If your product has a '-' in the title this will mess it up. -->
